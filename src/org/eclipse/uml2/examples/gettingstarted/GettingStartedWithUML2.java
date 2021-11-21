@@ -16,7 +16,9 @@ package org.eclipse.uml2.examples.gettingstarted;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -31,7 +33,11 @@ import org.eclipse.uml2.uml.Association;
 import org.eclipse.uml2.uml.Classifier;
 import org.eclipse.uml2.uml.Comment;
 import org.eclipse.uml2.uml.Component;
+import org.eclipse.uml2.uml.ConnectableElement;
+import org.eclipse.uml2.uml.Connector;
 import org.eclipse.uml2.uml.Constraint;
+import org.eclipse.uml2.uml.Deployment;
+import org.eclipse.uml2.uml.DeploymentSpecification;
 import org.eclipse.uml2.uml.Device;
 import org.eclipse.uml2.uml.Enumeration;
 import org.eclipse.uml2.uml.EnumerationLiteral;
@@ -41,7 +47,9 @@ import org.eclipse.uml2.uml.Interface;
 import org.eclipse.uml2.uml.LiteralUnlimitedNatural;
 import org.eclipse.uml2.uml.Model;
 import org.eclipse.uml2.uml.NamedElement;
+import org.eclipse.uml2.uml.Namespace;
 import org.eclipse.uml2.uml.Node;
+import org.eclipse.uml2.uml.Port;
 import org.eclipse.uml2.uml.PrimitiveType;
 import org.eclipse.uml2.uml.Property;
 import org.eclipse.uml2.uml.Relationship;
@@ -64,7 +72,28 @@ public class GettingStartedWithUML2 {
 
 	private static File outputDir;
 	private static int  nodes_num;
-
+	private static int  edges_num;
+	
+	private static ArrayList<Model> models;
+	private static ArrayList<Component> components;
+	private static ArrayList<org.eclipse.uml2.uml.Package> packages;
+	private static ArrayList<Interface> interfaces;
+	private static ArrayList<Node> nodes;
+	private static ArrayList<Device> devices;
+	private static ArrayList<ExecutionEnvironment> executionEnvironments;
+	private static ArrayList<Artifact> artifacts;
+	
+	static void init()
+	{
+		 models = new ArrayList<Model>();
+		 components = new ArrayList<Component>();
+	     packages = new ArrayList<org.eclipse.uml2.uml.Package>();
+		  interfaces = new ArrayList<Interface>();
+		  nodes = new ArrayList<Node>();
+		 devices = new ArrayList<Device>();
+		 executionEnvironments = new ArrayList<ExecutionEnvironment>();
+		 artifacts = new ArrayList<Artifact>();
+	}
 	/**
 	 * The main program. It expects one argument, which is the local filesystem
 	 * path of a directory in which to create the <tt>ExtendedPO2.uml</tt> file.
@@ -79,138 +108,37 @@ public class GettingStartedWithUML2 {
 		if (!processArgs(args)) {
 			System.exit(1);
 		}
+		nodes_num = 30;
+		edges_num = nodes_num * 4;
+		init();
 
 		banner("Creating root model package and primitive types.");
 
 		// Create the root package (a model).
 		Model UML2Model = createModel("uml2");
+		
+		createNode(UML2Model, nodes_num);
+		createConnections(edges_num);
+		
+		
+		
 
-		// Create primitive types to be used as types of attributes in our
-		// classes.
-		PrimitiveType intPrimitiveType = createPrimitiveType(UML2Model, "int");
-		PrimitiveType stringPrimitiveType = createPrimitiveType(UML2Model,
-			"String");
-		PrimitiveType datePrimitiveType = createPrimitiveType(UML2Model, "Date");
-		PrimitiveType skuPrimitiveType = createPrimitiveType(UML2Model, "SKU");
-
-		// Create enumerations to be used as types of attributes in our classes.
-		Enumeration orderStatusEnumeration = createEnumeration(UML2Model,
-			"OrderStatus");
-		createEnumerationLiteral(orderStatusEnumeration, "Pending");
-		createEnumerationLiteral(orderStatusEnumeration, "BackOrder");
-		createEnumerationLiteral(orderStatusEnumeration, "Complete");
-		
-		int i, avg = nodes_num/4;
-		int num_last = nodes_num-3*avg;
-		
-		banner("Creating Package Diagram.");
-		org.eclipse.uml2.uml.Package PackageDiagram = createPackage(UML2Model, "package diagram");
-		generate_package_diagram(avg, PackageDiagram);
-		
-		banner("Creating Deployment Diagram.");
-		org.eclipse.uml2.uml.Package DeploymentDiagram = createPackage(UML2Model, "deployment diagram");
-		generate_deployment_diagram(avg, DeploymentDiagram);
-		
-		banner("Creating Component Diagram.");
-		org.eclipse.uml2.uml.Package ComponentDiagram = createPackage(UML2Model, "component diagram");
-		generate_component_diagram(avg, ComponentDiagram);
-		
+//		 
+//		banner("Creating Package Diagram.");
+//		org.eclipse.uml2.uml.Package PackageDiagram = createPackage(UML2Model, "package diagram");
+//		generate_package_diagram(avg, PackageDiagram);
+//		
+//		banner("Creating Deployment Diagram.");
+//		org.eclipse.uml2.uml.Package DeploymentDiagram = createPackage(UML2Model, "deployment diagram");
+//		generate_deployment_diagram(avg, DeploymentDiagram);
+//		
+//		banner("Creating Component Diagram.");
+//		org.eclipse.uml2.uml.Package ComponentDiagram = createPackage(UML2Model, "component diagram");
+//		generate_component_diagram(avg, ComponentDiagram);
+//		
 		/*
 		banner("Creating Composite structure Diagram.");
 		Model CompositeStructureDiagram = createModel("component diagram");
-		*/
-		
-		/*
-		banner("Creating model classes.");
-
-		// Create the classes.
-		org.eclipse.uml2.uml.Class supplierClass = createClass(epo2Model,
-			"Supplier", false);
-		org.eclipse.uml2.uml.Class customerClass = createClass(epo2Model,
-			"Customer", false);
-		org.eclipse.uml2.uml.Class purchaseOrderClass = createClass(epo2Model,
-			"PurchaseOrder", false);
-		org.eclipse.uml2.uml.Class itemClass = createClass(epo2Model, "Item",
-			false);
-		org.eclipse.uml2.uml.Class addressClass = createClass(epo2Model,
-			"Address", true);
-		org.eclipse.uml2.uml.Class usAddressClass = createClass(epo2Model,
-			"USAddress", false);
-		org.eclipse.uml2.uml.Class globalAddressClass = createClass(epo2Model,
-			"GlobalAddress", false);
-		org.eclipse.uml2.uml.Class globalLocationClass = createClass(epo2Model,
-			"GlobalLocation", false);
-
-		// Create generalization relationships amongst our classes.
-		createGeneralization(usAddressClass, addressClass);
-		createGeneralization(globalAddressClass, addressClass);
-		createGeneralization(globalAddressClass, globalLocationClass);
-
-		banner("Creating attributes of model classes.");
-
-		// Create attributes in our classes.
-		createAttribute(supplierClass, "name", stringPrimitiveType, 0, 1);
-		createAttribute(customerClass, "customerID", intPrimitiveType, 1, 1);
-		createAttribute(purchaseOrderClass, "comment", stringPrimitiveType, 0,
-			1);
-		createAttribute(purchaseOrderClass, "orderDate", datePrimitiveType, 1,
-			1);
-		createAttribute(purchaseOrderClass, "status", orderStatusEnumeration,
-			1, 1);
-		createAttribute(purchaseOrderClass, "totalAmount", intPrimitiveType, 0,
-			1);
-		createAttribute(itemClass, "productName", stringPrimitiveType, 0, 1);
-		createAttribute(itemClass, "quantity", intPrimitiveType, 0, 1);
-		createAttribute(itemClass, "usPrice", intPrimitiveType, 0, 1);
-		createAttribute(itemClass, "comment", stringPrimitiveType, 0, 1);
-		createAttribute(itemClass, "shipDate", datePrimitiveType, 0, 1);
-		createAttribute(itemClass, "partNum", skuPrimitiveType, 1, 1);
-		createAttribute(addressClass, "name", stringPrimitiveType, 0, 1);
-		createAttribute(addressClass, "country", stringPrimitiveType, 0, 1);
-		createAttribute(usAddressClass, "street", stringPrimitiveType, 1, 1);
-		createAttribute(usAddressClass, "city", stringPrimitiveType, 1, 1);
-		createAttribute(usAddressClass, "state", stringPrimitiveType, 1, 1);
-		createAttribute(usAddressClass, "zip", stringPrimitiveType, 1, 1);
-		createAttribute(globalAddressClass, "location", stringPrimitiveType, 1,
-			1);
-		createAttribute(globalLocationClass, "countryCode", intPrimitiveType,
-			1, 1);
-*/
-		/*
-		banner("Creating associations between model classes.");
-
-		// Create associations between our classes.
-		createAssociation(supplierClass, true,
-			AggregationKind.COMPOSITE_LITERAL, "orders", 0,
-			LiteralUnlimitedNatural.UNLIMITED, purchaseOrderClass, false,
-			AggregationKind.NONE_LITERAL, "", 1, 1);
-		createAssociation(supplierClass, true, AggregationKind.NONE_LITERAL,
-			"pendingOrders", 0, LiteralUnlimitedNatural.UNLIMITED,
-			purchaseOrderClass, false, AggregationKind.NONE_LITERAL, "", 0, 1);
-		createAssociation(supplierClass, true, AggregationKind.NONE_LITERAL,
-			"shippedOrders", 0, LiteralUnlimitedNatural.UNLIMITED,
-			purchaseOrderClass, false, AggregationKind.NONE_LITERAL, "", 0, 1);
-		createAssociation(supplierClass, true,
-			AggregationKind.COMPOSITE_LITERAL, "customers", 0,
-			LiteralUnlimitedNatural.UNLIMITED, customerClass, false,
-			AggregationKind.NONE_LITERAL, "", 1, 1);
-		createAssociation(customerClass, true, AggregationKind.NONE_LITERAL,
-			"orders", 0, LiteralUnlimitedNatural.UNLIMITED, purchaseOrderClass,
-			true, AggregationKind.NONE_LITERAL, "customer", 1, 1);
-		createAssociation(purchaseOrderClass, true,
-			AggregationKind.NONE_LITERAL, "previousOrder", 0, 1,
-			purchaseOrderClass, false, AggregationKind.NONE_LITERAL, "", 0, 1);
-		createAssociation(purchaseOrderClass, true,
-			AggregationKind.COMPOSITE_LITERAL, "items", 0,
-			LiteralUnlimitedNatural.UNLIMITED, itemClass, true,
-			AggregationKind.NONE_LITERAL, "order", 1, 1);
-		createAssociation(purchaseOrderClass, true,
-			AggregationKind.COMPOSITE_LITERAL, "billTo", 1, 1, addressClass,
-			false, AggregationKind.NONE_LITERAL, "", 1, 1);
-		createAssociation(purchaseOrderClass, true,
-			AggregationKind.COMPOSITE_LITERAL, "shipTo", 1, 1, addressClass,
-			false, AggregationKind.NONE_LITERAL, "", 1, 1);
-		
 		*/
 
 		// Save our model to a file in the user-specified output directory
@@ -221,37 +149,262 @@ public class GettingStartedWithUML2 {
 		
 		banner("Saving the overall UML models to %s.", outputURI.toFileString());
 		save(UML2Model, outputURI);
-		/*
-		URI outputURI_Package = URI.createFileURI(outputDir.getAbsolutePath())
-			.appendSegment("package diagram")
-			.appendFileExtension(UMLResource.FILE_EXTENSION);
-		
-		URI outputURI_Deployment = URI.createFileURI(outputDir.getAbsolutePath())
-				.appendSegment("deployment diagram")
-				.appendFileExtension(UMLResource.FILE_EXTENSION);
-		URI outputURI_Component = URI.createFileURI(outputDir.getAbsolutePath())
-				.appendSegment("component diagram")
-				.appendFileExtension(UMLResource.FILE_EXTENSION);
-		URI outputURI_CompositeStructure = URI.createFileURI(outputDir.getAbsolutePath())
-				.appendSegment("composite structure diagram")
-				.appendFileExtension(UMLResource.FILE_EXTENSION);
-		//save(epo2Model, outputURI);
-		
-		banner("Saving the package diagram to %s.", outputURI_Package.toFileString());
-		save(PackageDiagram, outputURI_Package);
-		banner("Saving the deployment diagram to %s.", outputURI_Deployment.toFileString());
-		save(DeploymentDiagram, outputURI_Deployment);
-		banner("Saving the component diagram to %s.", outputURI_Component.toFileString());
-		save(ComponentDiagram, outputURI_Component);
-		banner("Saving the composite structure diagram to %s.", outputURI_CompositeStructure.toFileString());
-		save(CompositeStructureDiagram, outputURI_CompositeStructure);
-		*/
+		 
 	}
+	
+	
 
 	//
 	// Model-building utilities
 	//
+	static void createConnections(int nums)
+	{
+ 
+		int each_num = nums / 4;
+		ArrayList<Namespace> dependElems = new ArrayList<Namespace>() ;
+		ArrayList<Classifier> generalizationElems = new ArrayList<Classifier>() ;
+		ArrayList<Type> associateElems = new ArrayList<Type>() ;
+		ArrayList<Node> nodeElems = new ArrayList<Node>();
+ 
+		for(Model m: models)
+		{
+			dependElems.add(m);
+		}
+		
+		for(Component c: components)
+		{
+			dependElems.add(c);
+			generalizationElems.add(c);
+			associateElems.add(c);
+		}
+		
+		for(org.eclipse.uml2.uml.Package p: packages)
+		{
+			dependElems.add(p);
+		}
+		
+		for(Interface i: interfaces)
+		{
+			dependElems.add(i);
+			generalizationElems.add(i);
+			associateElems.add(i);
+		}
+		for(Node n: nodes)
+		{
+			dependElems.add(n);
+			generalizationElems.add(n);
+			associateElems.add(n);
+			nodeElems.add(n);
+		}
+		for(Device d:  devices)
+		{
+			dependElems.add(d);
+			generalizationElems.add(d);
+			associateElems.add(d);
+			nodeElems.add(d);
+		}
+		
+		for(ExecutionEnvironment e:  executionEnvironments)
+		{
+			dependElems.add(e);
+			generalizationElems.add(e);
+			associateElems.add(e);
+			nodeElems.add(e);
+		}
+		
+		for(Artifact a:  artifacts)
+		{
+			dependElems.add(a);
+			generalizationElems.add(a);
+			associateElems.add(a);
+		}
+//		ArrayList<Port> connectElems;//now there is no port
+		
+		for(int i = 0; i < each_num; i++)
+		{
+			int j = (int)(Math.random()*dependElems.size());
+			int k = (int)(Math.random()*dependElems.size());
+			createDependencies(dependElems.get(j), dependElems.get(k));
+			
+//			System.out.println(j+k);
+			
+			j = (int)(Math.random()*generalizationElems.size());
+			k = (int)(Math.random()*generalizationElems.size());
+			createGeneralizations(generalizationElems.get(j), generalizationElems.get(k));
+			
+			j = (int)(Math.random()*associateElems.size());
+			k = (int)(Math.random()*associateElems.size());
+			createAssociations(associateElems.get(j), associateElems.get(k));
+			
+			j = (int)(Math.random()*nodeElems.size());
+			k = (int)(Math.random()*nodeElems.size());
+			createCommunicationPaths(nodeElems.get(j), nodeElems.get(k));
+			createDeployments(nodeElems.get(j), nodeElems.get(k));
+			
+		}
+	}
+	
+	static void createDependencies(Namespace client, Namespace supplier)
+	{
+		client.createDependency(supplier);
+	}
+	static void createGeneralizations(Classifier specificClassifier, Classifier generalClassifier)
+	{
+		specificClassifier.createGeneralization(generalClassifier);
+	}
+	 
+	static void createAssociations(Type type1, Type type2)
+	{
+		type1.createAssociation(true, AggregationKind.NONE_LITERAL,
+				type1.getName(), 0, 1,
+				type2, true, AggregationKind.NONE_LITERAL, type2.getName(), 0, 1);
+	}
+	
+	static void createCommunicationPaths(Node node1, Node node2)
+	{
+		node1.createCommunicationPath(true, AggregationKind.NONE_LITERAL, 
+				"node_", 0, 1, node2, true, AggregationKind.NONE_LITERAL, "node_", 0, 1);
+	}
+	
+	static void createDeployments(Node node1, Node node2)
+	{
+		node1.createDeployment("").setLocation(node2);
+	}
+	
+	static void createConnector(Component node, Port p1, Port p2)
+	{
+		 Connector connector = node.createOwnedConnector("");
+		 connector.createEnd().setRole(p1);
+		 connector.createEnd().setRole(p2);
+	}
+	
+	protected static Generalization createGeneralization(
+			Classifier specificClassifier, Classifier generalClassifier) {
 
+		Generalization generalization = specificClassifier
+			.createGeneralization(generalClassifier);
+
+		out("Generalization %s --|> %s created.",
+			specificClassifier.getQualifiedName(),
+			generalClassifier.getQualifiedName());
+
+		return generalization;
+	}
+	/*
+	 * create all nodes and add comments to node
+	 * 
+	 */
+	protected static void  createNode(Model model, int nums)
+	{
+		int each_num = nums / 8;
+		for(int i = 0; i < each_num; i++)
+		{
+			models.add((Model) create_model(model, "model"+Integer.toString(i)));
+			components.add((Component)create_component(model, "component"+Integer.toString(i)));
+			packages.add((org.eclipse.uml2.uml.Package) create_package(model, "package"+Integer.toString(i)));
+			interfaces.add((Interface) create_interface(model, "interface"+Integer.toString(i)));
+			devices.add((Device) create_device(model, "device"+Integer.toString(i)));
+			nodes.add((Node) create_node(model, "node"+Integer.toString(i)));
+			executionEnvironments.add((ExecutionEnvironment) create_execution_environment(model, "executionEnvironment"+Integer.toString(i)));
+			artifacts.add((Artifact) create_artifact(model, "artifact"+Integer.toString(i)));
+			
+			creatComments(i);
+			
+		}
+		for(int i = 0; i < nums- 8*each_num; i++)
+		{
+			components.add((Component)create_component(model, "component"+Integer.toString(i+each_num))); 
+		}
+		
+		
+	}
+	
+	 static void creatComments( int i)
+	 {
+		 int j = (int) (Math.random()*7);
+		 int selector = (int)(Math.random()*2);
+//		 System.out.println("selector"+selector);
+		 if(selector < 1)
+		 {
+			 switch(j)
+				{
+					case 0:
+						creatExposureComments(models.get(i));
+						break;
+					case 1:
+						creatExposureComments(components.get(i));
+						break;
+					case 2:
+						creatExposureComments(packages.get(i));
+						break;
+					case 3:
+						creatExposureComments(interfaces.get(i));
+						break;
+					case 4:
+						creatExposureComments(devices.get(i));
+						break;
+					case 5:
+						creatExposureComments(nodes.get(i));
+						break;
+					case 6:
+						creatExposureComments(executionEnvironments.get(i));
+						break;
+					case 7:
+						creatExposureComments(artifacts.get(i));
+						break;
+					default : 
+						break;
+						
+				}
+		 }else
+		 {
+			 switch(j)
+				{
+					case 0:
+						creatAssetComments(models.get(i), i);
+						break;
+					case 1:
+						creatAssetComments(components.get(i), i);
+						break;
+					case 2:
+						creatAssetComments(packages.get(i), i);
+						break;
+					case 3:
+						creatAssetComments(interfaces.get(i), i);
+						break;
+					case 4:
+						creatAssetComments(devices.get(i), i);
+						break;
+					case 5:
+						creatAssetComments(nodes.get(i), i);
+						break;
+					case 6:
+						creatAssetComments(executionEnvironments.get(i), i);
+						break;
+					case 7:
+						creatAssetComments(artifacts.get(i), i);
+						break;
+					default : 
+						break;
+						
+				}
+		 }
+		 
+			
+	 }
+	
+    static void creatExposureComments(Namespace p)
+    {
+    	p.createOwnedComment().setBody("{\"exposure\":true}");
+    }
+    
+    static void creatAssetComments(Namespace p, int value)
+    {
+    	p.createOwnedComment().setBody("{\n"
+				+ "\"value\":"+ Integer.toString(value)+ "\n"
+				+ "}");
+    }
+    
 	protected static Model createModel(String name) {
 		Model model = UMLFactory.eINSTANCE.createModel();
 		model.setName(name);
@@ -320,6 +473,7 @@ public class GettingStartedWithUML2 {
 	protected static org.eclipse.uml2.uml.PackageableElement create_package(org.eclipse.uml2.uml.Package package_, String name) {
 
 		EClass eClass = UMLPackage.Literals.PACKAGE;
+//		package_.createNestedPackage("fdsa");
 		org.eclipse.uml2.uml.PackageableElement package_in_diagram = package_.createPackagedElement(name, eClass);
 
 		out("Package %s created.", name);
@@ -425,18 +579,7 @@ public class GettingStartedWithUML2 {
 		return class_;
 	}
 
-	protected static Generalization createGeneralization(
-			Classifier specificClassifier, Classifier generalClassifier) {
-
-		Generalization generalization = specificClassifier
-			.createGeneralization(generalClassifier);
-
-		out("Generalization %s --|> %s created.",
-			specificClassifier.getQualifiedName(),
-			generalClassifier.getQualifiedName());
-
-		return generalization;
-	}
+	
 
 	protected static Property createAttribute(
 			org.eclipse.uml2.uml.Class class_, String name, Type type,
