@@ -1455,61 +1455,61 @@ public class GettingStartedWithUML2 {
 			case 0:
 				for(org.eclipse.uml2.uml.Package p:packages) {
 					random1 = (int)(Math.random()*3);
-					Comment cmt = p.createOwnedComment();
-					if(random1 == 1) cmt.setBody("{\"exposure\":true}");
-					else if(random1 == 2) cmt.setBody("{\n"
-							+ "\"value\":2\n"
-							+ "}");
+					if(random1 > 0) {
+						Comment cmt = p.createOwnedComment();
+						if(random1 == 1) cmt.setBody("{\"exposure\":true}");
+						else if(random1 == 2) cmt.setBody("{\n" + "\"value\":2\n" + "}");
+					}
 				}
 				break;
 			case 1:
 				for(Model m:models) {
 					random1 = (int)(Math.random()*3);
-					Comment cmt = m.createOwnedComment();
-					if(random1 == 1) cmt.setBody("{\"exposure\":true}");
-					else if(random1 == 2) cmt.setBody("{\n"
-							+ "\"value\":2\n"
-							+ "}");
+					if(random1 > 0) {
+						Comment cmt = m.createOwnedComment();
+						if(random1 == 1) cmt.setBody("{\"exposure\":true}");
+						else if(random1 == 2) cmt.setBody("{\n" + "\"value\":2\n" + "}");
+					}
 				}
 				break;
 			case 2:
 				for(Artifact a:artifacts) {
 					random1 = (int)(Math.random()*3);
-					Comment cmt = a.createOwnedComment();
-					if(random1 == 1) cmt.setBody("{\"exposure\":true}");
-					else if(random1 == 2) cmt.setBody("{\n"
-							+ "\"value\":2\n"
-							+ "}");
+					if(random1 > 0) {
+						Comment cmt = a.createOwnedComment();
+						if(random1 == 1) cmt.setBody("{\"exposure\":true}");
+						else if(random1 == 2) cmt.setBody("{\n" + "\"value\":2\n" + "}");
+					}
 				}
 				break;
 			case 3:
 				for(Device d:devices) {
 					random1 = (int)(Math.random()*3);
-					Comment cmt = d.createOwnedComment();
-					if(random1 == 1) cmt.setBody("{\"exposure\":true}");
-					else if(random1 == 2) cmt.setBody("{\n"
-							+ "\"value\":2\n"
-							+ "}");
+					if(random1 > 0) {
+						Comment cmt = d.createOwnedComment();
+						if(random1 == 1) cmt.setBody("{\"exposure\":true}");
+						else if(random1 == 2) cmt.setBody("{\n" + "\"value\":2\n" + "}");
+					}
 				}
 				break;
 			case 4:
 				for(ExecutionEnvironment e:execution_environments) {
 					random1 = (int)(Math.random()*3);
-					Comment cmt = e.createOwnedComment();
-					if(random1 == 1) cmt.setBody("{\"exposure\":true}");
-					else if(random1 == 2) cmt.setBody("{\n"
-							+ "\"value\":2\n"
-							+ "}");
+					if(random1 > 0) {
+						Comment cmt = e.createOwnedComment();
+						if(random1 == 1) cmt.setBody("{\"exposure\":true}");
+						else if(random1 == 2) cmt.setBody("{\n" + "\"value\":2\n" + "}");
+					}
 				}
 				break;
 			case 5:
 				for(Node n:nodes) {
 					random1 = (int)(Math.random()*3);
-					Comment cmt = n.createOwnedComment();
-					if(random1 == 1) cmt.setBody("{\"exposure\":true}");
-					else if(random1 == 2) cmt.setBody("{\n"
-							+ "\"value\":2\n"
-							+ "}");
+					if(random1 > 0) {
+						Comment cmt = n.createOwnedComment();
+						if(random1 == 1) cmt.setBody("{\"exposure\":true}");
+						else if(random1 == 2) cmt.setBody("{\n" + "\"value\":2\n" + "}");
+					}
 				}
 				break;
 			}
@@ -1878,41 +1878,41 @@ public class GettingStartedWithUML2 {
 			case 0:
 				for(org.eclipse.uml2.uml.Package p:packages) {
 					random1 = (int)(Math.random()*3);
-					Comment cmt = p.createOwnedComment();
-					if(random1 == 1) cmt.setBody("{\"exposure\":true}");
-					else if(random1 == 2) cmt.setBody("{\n"
-							+ "\"value\":2\n"
-							+ "}");
+					if(random1 > 0) {
+						Comment cmt = p.createOwnedComment();
+						if(random1 == 1) cmt.setBody("{\"exposure\":true}");
+						else if(random1 == 2) cmt.setBody("{\n" + "\"value\":2\n" + "}");
+					}
 				}
 				break;
 			case 1:
 				for(Model m:models) {
 					random1 = (int)(Math.random()*3);
-					Comment cmt = m.createOwnedComment();
-					if(random1 == 1) cmt.setBody("{\"exposure\":true}");
-					else if(random1 == 2) cmt.setBody("{\n"
-							+ "\"value\":2\n"
-							+ "}");
+					if(random1 > 0) {
+						Comment cmt = m.createOwnedComment();
+						if(random1 == 1) cmt.setBody("{\"exposure\":true}");
+						else if(random1 == 2) cmt.setBody("{\n" + "\"value\":2\n" + "}");
+					}
 				}
 				break;
 			case 2:
 				for(Interface f:interfaces) {
 					random1 = (int)(Math.random()*3);
-					Comment cmt = f.createOwnedComment();
-					if(random1 == 1) cmt.setBody("{\"exposure\":true}");
-					else if(random1 == 2) cmt.setBody("{\n"
-							+ "\"value\":2\n"
-							+ "}");
+					if(random1 > 0) {
+						Comment cmt = f.createOwnedComment();
+						if(random1 == 1) cmt.setBody("{\"exposure\":true}");
+						else if(random1 == 2) cmt.setBody("{\n" + "\"value\":2\n" + "}");
+					}
 				}
 				break;
 			case 3:
 				for(Component c:components) {
 					random1 = (int)(Math.random()*3);
-					Comment cmt = c.createOwnedComment();
-					if(random1 == 1) cmt.setBody("{\"exposure\":true}");
-					else if(random1 == 2) cmt.setBody("{\n"
-							+ "\"value\":2\n"
-							+ "}");
+					if(random1 > 0) {
+						Comment cmt = c.createOwnedComment();
+						if(random1 == 1) cmt.setBody("{\"exposure\":true}");
+						else if(random1 == 2) cmt.setBody("{\n" + "\"value\":2\n" + "}");
+					}
 				}
 				break;
 			}
